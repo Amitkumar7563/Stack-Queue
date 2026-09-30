@@ -377,35 +377,39 @@ class Solution {
 public:
     string removeKdigits(string num, int k) {
 
-        string st;
+        string result = "";  // acts like a stack
 
-        for(char ch : num) {
+        int n = num.length();
 
-            while(!st.empty() && k > 0 && st.back() > ch) {
-                st.pop_back();
+        for(int i = 0; i < n; i++) {
+
+            // Remove previous larger digits
+            while(result.length() > 0 &&
+                  result.back() > num[i] &&
+                  k > 0) {
+
+                result.pop_back();
                 k--;
             }
 
-            st.push_back(ch);
+            // Avoid leading zeroes
+            if(result.length() > 0 || num[i] != '0') {
+                result.push_back(num[i]);
+            }
         }
 
-        // If digits are already increasing
-        // remove remaining digits from the end
-        while(k > 0) {
-            st.pop_back();
+        // If k is still remaining, remove from the end
+        while(k > 0 && !result.empty()) {
+            result.pop_back();
             k--;
         }
 
-        // Remove leading zeros
-        int i = 0;
-
-        while(i < st.size() && st[i] == '0') {
-            i++;
+        // If nothing remains
+        if(result == "") {
+            return "0";
         }
 
-        string ans = st.substr(i);
-
-        return ans.empty() ? "0" : ans;
+        return result;
     }
 };
 ```
